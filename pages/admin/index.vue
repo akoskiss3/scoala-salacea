@@ -1,13 +1,17 @@
 <template>
 	<v-container fluid>
 		<v-row>
-			<h1 class="headline">Main Page</h1>
+			<h2> ADMIN DASHBOARD </h2>
 		</v-row>
 	</v-container>
 </template>
 
 <script>
 export default {
-	layout: 'default'
+	layout: 'admin',
+	data() {
+		return {
+		};
+	},
 };
 </script>
