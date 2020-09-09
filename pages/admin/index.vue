@@ -1,0 +1,93 @@
+<template>
+	<v-container v-if="userStore" fluid>
+		<!-- <v-row class="justify-center">
+			<v-col cols="12" md="10" xl="8">
+				<v-card>
+					<v-card-title>News</v-card-title>
+					<v-card-text>
+						<p>Displaying here exising news ... </p>
+						<v-divider class="mb-2"></v-divider>
+						<span class="title">Add text</span>
+						<v-text-field label="News text"></v-text-field>
+					</v-card-text>
+					<v-card-actions>
+						<v-btn>Add</v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-col>
+		</v-row> -->
+		<v-row class="justify-center">
+			<v-col cols="12" lg="10" xl="7">
+				<v-row class="justify-center">
+					<template v-for="(cardItem, index) in dashboardCards">
+						<v-col :key="index" cols="12" md="6">
+							<v-card min-height="250">
+								<v-card-title>
+									<v-icon color="#708D81" size="60">{{ cardItem.icon }}</v-icon>
+									<span class="headline ml-3">{{ cardItem.title }}</span>
+								</v-card-title>
+								<v-card-text>{{ cardItem.description }}</v-card-text>
+							</v-card>
+						</v-col>
+					</template>
+				</v-row>
+			</v-col>
+		</v-row>
+	</v-container>
+</template>
+
+<script>
+import { mapGetters } from 'vuex'
+
+export default {
+	layout: 'admin',
+	data() {
+		return {
+			dashboardCards: [
+				{
+					icon: 'mdi-newspaper-variant-multiple-outline',
+					title: 'Handle News',
+					description: 'Manage News feed'
+				},
+				{
+					icon: 'mdi-image',
+					title: 'Handle Gallery',
+					description: 'Add or remove uploaded pictures'
+				},
+				{
+					icon: 'mdi-file-document-multiple',
+					title: 'Manage Uploaded Documents',
+					description: 'Handle Uploaded Documents'
+				},
+				{
+					icon: 'mdi-account',
+					title: 'Manage Users',
+					description: 'Manage Users in the system'
+				}
+			]
+		};
+	},
+	created () {
+		if (!this.userStore) {		
+			this.$router.push('/admin/login')
+		}
+	},
+	computed: {
+		...mapGetters('user', {
+			userStore: 'getUser'
+		})
+	},
+	beforeEach(to, from, next) {
+        // const user = firebase.auth().currentUser
+        // if (user) {
+        //     const userID = user.uid
+        //     next('/noaccesslevelmessage')   
+		// }
+		if (this.$store.getters('getUser')) {
+            next('/admin')
+		} else {
+			next('/admin/login')
+		}
+    }
+};
+</script>
