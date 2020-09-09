@@ -8,7 +8,10 @@
 						<v-row class="justify-center">
 							<v-col cols="12" md="11">
 								<v-text-field
-									label="Username">
+									label="Email"
+									v-model="email"
+									:rules="emailRules"
+									type="email">
 								</v-text-field>
 							</v-col>
 						</v-row>
@@ -16,7 +19,8 @@
 							<v-col cols="12" md="11">
 								<v-text-field
 									label="Password"
-									type="password">
+									type="password"
+									v-model="password">
 								</v-text-field>
 							</v-col>
 						</v-row>
@@ -27,7 +31,7 @@
 					<v-card-actions class="ma-1">
 						<v-row class="justify-center">
 							<v-col cols="12" md="11">
-								<v-btn block color="green darken-2" dark>Login</v-btn>
+								<v-btn block color="green darken-2" dark @click="loginWithEmailAndPassword()">Login</v-btn>
 							</v-col>
 						</v-row>
 					</v-card-actions>
@@ -38,6 +42,27 @@
 </template>
 <script>
 export default {
-	layout: 'admin'
+	name: 'login',
+	layout: 'admin',
+	data () {
+		return {
+			email: '',
+			password: '',
+			emailRules: [
+				v => !!v || 'E-mail is required',
+				v => /.+@.+/.test(v) || 'E-mail must be valid'
+			],
+		}
+	},
+	methods: {
+		loginWithEmailAndPassword () {
+			this.$store.dispatch('user/signUserIn', {email: this.email, password: this.password})
+			.then((result) => {
+				if (result.status === 'success') {
+					this.$router.push('/admin')
+				}
+			})
+		}
+	}
 }
 </script>
