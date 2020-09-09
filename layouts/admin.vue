@@ -4,7 +4,7 @@
 			<v-toolbar-title>"Balaskó Nándor" School Admin</v-toolbar-title>
 			<v-spacer />
 			<v-btn text to="/"><v-icon class="mr-2">mdi-home-export-outline</v-icon>Main Page</v-btn>
-			<v-btn text><v-icon class="mr-2">mdi-location-exit</v-icon>Logout</v-btn>
+			<v-btn text @click="logout()"><v-icon class="mr-2">mdi-location-exit</v-icon>Logout</v-btn>
 		</v-app-bar>
 
 		<!-- <v-navigation-drawer v-if="userStore" v-model="drawer" :mini-variant="miniVariant" clipped fixed app>
@@ -25,7 +25,9 @@
 		</v-main>
 
 		<v-footer absolute app>
-			<span>&copy; {{ new Date().getFullYear() }}</span>
+			<v-row class="justify-center">
+				<span>&copy; {{ new Date().getFullYear() }}</span>
+			</v-row>
 		</v-footer>
 	</v-app>
 </template>
@@ -58,6 +60,13 @@ export default {
 		...mapGetters('user', {
 			userStore: 'getUser'
 		})
+	},
+	methods: {
+		logout () {
+			this.$store.dispatch('user/userLogOut').then(() => {
+				this.$router.push('/admin/login')
+			})
+		}
 	}
 };
 </script>
