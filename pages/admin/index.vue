@@ -1,21 +1,5 @@
 <template>
 	<v-container v-if="userStore" fluid>
-		<!-- <v-row class="justify-center">
-			<v-col cols="12" md="10" xl="8">
-				<v-card>
-					<v-card-title>News</v-card-title>
-					<v-card-text>
-						<p>Displaying here exising news ... </p>
-						<v-divider class="mb-2"></v-divider>
-						<span class="title">Add text</span>
-						<v-text-field label="News text"></v-text-field>
-					</v-card-text>
-					<v-card-actions>
-						<v-btn>Add</v-btn>
-					</v-card-actions>
-				</v-card>
-			</v-col>
-		</v-row> -->
 		<v-row class="justify-center">
 			<v-col cols="12" lg="10" xl="7">
 				<v-row class="justify-center">
@@ -33,11 +17,25 @@
 				</v-row>
 			</v-col>
 		</v-row>
+
+		<v-row class="justify-center">
+			<v-col cols="12" md="10" xl="8">
+				<v-card>
+					<v-card-text>
+						<p>{{ dataFromDb }} </p>
+					</v-card-text>
+					<v-card-actions>
+						<v-btn @click="getItemFromDb()">GET ITEM</v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-col>
+		</v-row>
 	</v-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import { db } from '~/plugins/firebase.js'
 
 export default {
 	layout: 'admin',
@@ -64,7 +62,8 @@ export default {
 					title: 'Manage Users',
 					description: 'Manage Users in the system'
 				}
-			]
+			],
+			dataFromDb: null
 		};
 	},
 	created () {
@@ -76,6 +75,14 @@ export default {
 		...mapGetters('user', {
 			userStore: 'getUser'
 		})
+	},
+	methods: {
+		async getItemFromDb() {
+			let result = await db.ref('news').once('value').then(snapshot => {
+				console.log('Snaphot::', snapshot.val())
+				this.dataFromDb = snapshot.val()
+			})
+		}
 	},
 	beforeEach(to, from, next) {
         // const user = firebase.auth().currentUser

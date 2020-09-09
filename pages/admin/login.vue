@@ -2,8 +2,8 @@
 	<v-container fill-height fluid>
 		<v-row class="justify-center align-center">
 			<v-col cols="12" sm="8" md="6" lg="4" xl="3">
-				<v-card class="pt-5">
-					<v-card-title class="justify-center headline">Login to dashboard</v-card-title>
+				<v-card class="pt-5 loginCard">
+					<v-card-title class="justify-center headline">Login to admin dashboard</v-card-title>
 					<v-card-text>
 						<v-row class="justify-center">
 							<v-col cols="12" md="11">
@@ -24,14 +24,14 @@
 								</v-text-field>
 							</v-col>
 						</v-row>
-						<v-row class="justify-center">
-							<p>* some info text here ... </p>
+						<v-row class="justify-center mb-n8">
+							<p>* some info text here if needed... </p>
 						</v-row>
 					</v-card-text>
 					<v-card-actions class="ma-1">
 						<v-row class="justify-center">
 							<v-col cols="12" md="11">
-								<v-btn block color="green darken-2" dark @click="loginWithEmailAndPassword()">Login</v-btn>
+								<v-btn block color="#C7BCA8" @click="loginWithEmailAndPassword()">Login</v-btn>
 							</v-col>
 						</v-row>
 					</v-card-actions>
@@ -66,3 +66,9 @@ export default {
 	}
 }
 </script>
+
+<style scoped>
+.loginCard {
+	margin-top: -30% !important;
+}
+</style>
