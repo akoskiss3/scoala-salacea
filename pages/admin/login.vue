@@ -5,40 +5,45 @@
 				<v-card class="pt-5 loginCard">
 					<v-alert type="error" v-if="userFeedback" dismissible class="mt-n5">{{ errorMessage }}</v-alert>
 					<v-card-title class="justify-center headline">Login to admin dashboard</v-card-title>
-					<v-card-text>
-						<v-row class="justify-center">
-							<v-col cols="12" md="11">
-								<v-text-field
-									label="Email"
-									v-model="email"
-									:rules="emailRules"
-									color="#708D81"
-									type="email">
-								</v-text-field>
-							</v-col>
-						</v-row>
-						<v-row class="justify-center mt-n5">
-							<v-col cols="12" md="11">
-								<v-text-field
-									label="Password"
-									type="password"
-									color="#708D81"
-									v-model="password">
-								</v-text-field>
-							</v-col>
-						</v-row>
-					</v-card-text>
-					<v-card-actions class="ma-1 mt-n5">
-						<v-row class="justify-center">
-							<v-col cols="12" md="11">
-								<v-btn block color="#708D81"
-									@click="loginWithEmailAndPassword()"
-									:disabled="isLoginButtonDisabled"
-									class="black--text">Login
-								</v-btn>
-							</v-col>
-						</v-row>
-					</v-card-actions>
+					<v-form v-model="valid">
+						<v-card-text>
+							<v-row class="justify-center">
+								<v-col cols="12" md="11">
+									<v-text-field
+										label="Email"
+										v-model="email"
+										:rules="emailRules"
+										color="#708D81"
+										type="email"
+										required>
+									</v-text-field>
+								</v-col>
+							</v-row>
+							<v-row class="justify-center mt-n5">
+								<v-col cols="12" md="11">
+									<v-text-field
+										label="Password"
+										type="password"
+										color="#708D81"
+										:rules="passwordRules"
+										v-model="password"
+										@keyup.enter="loginWithEmailAndPassword()">
+									</v-text-field>
+								</v-col>
+							</v-row>
+						</v-card-text>
+						<v-card-actions class="ma-1 mt-n5">
+							<v-row class="justify-center">
+								<v-col cols="12" md="11">
+									<v-btn block color="#708D81"
+										@click="loginWithEmailAndPassword()"
+										:disabled="!valid"
+										class="white--text">Login
+									</v-btn>
+								</v-col>
+							</v-row>
+						</v-card-actions>
+					</v-form>
 				</v-card>
 			</v-col>
 		</v-row>
@@ -56,13 +61,12 @@ export default {
 				v => !!v || 'E-mail is required',
 				v => /.+@.+/.test(v) || 'E-mail must be valid'
 			],
+			passwordRules: [
+				v => !!v || 'Password is required'
+			],
 			userFeedback: false,
-			errorMessage: ''
-		}
-	},
-	computed: {
-		isLoginButtonDisabled () {
-			return !this.email.length && !this.password.length
+			errorMessage: '',
+			valid: false
 		}
 	},
 	methods: {

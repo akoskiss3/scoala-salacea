@@ -69,17 +69,22 @@ export default {
 				{
 					icon: 'mdi-account',
 					title: 'Users',
-					description: 'Manage Users in the system'
+					description: 'Manage Users in the system',
+					navigateTo: '/admin/users'
 				}
 			],
 			dataFromDb: null
 		};
 	},
 	created () {
-		const user = auth.currentUser
-		if (!user) {
-			this.$router.push('/admin/login')
-		}
+		auth.onAuthStateChanged(user => {
+			console.log('USER:', user)
+            if (!user) {
+				this.$router.push('/admin/login')
+			} else {
+				this.$store.commit('user/setUser', {id: user.uid, email: user.email})
+			}
+		})
 	},
 	computed: {
 		...mapGetters('user', {

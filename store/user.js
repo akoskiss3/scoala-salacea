@@ -1,19 +1,37 @@
 import { db, auth } from '~/plugins/firebase.js'
 
 const state = () => ({
-	user: null
+	user: null,
+	admins: []
 });
 
 const mutations = {
     setUser (state, payload) {
         state.user = payload
-    }
+	},
+	setAdmins(state, payload) {
+		state.admins = payload
+	},
+	addUserToState (state, payload) {
+		state.admins.push(payload)
+	},
+	removeUser (state, payload) {
+		const allUsers = state.admins
+        allUsers.forEach((value, index) => {
+            if (value.id === payload) {
+                state.admins.splice(index, 1)
+            }
+        })
+	}
 };
 
 const getters = {
     getUser (state) {
         return state.user
-    }
+	},
+	getAllUsers (state) {
+		return state.admins
+	}
 };
 
 const actions = {
@@ -33,7 +51,7 @@ const actions = {
 	signInWithExistingAccount({commit, dispatch}, payload) {
         return new Promise((resolve, reject) => {
             auth.signInWithEmailAndPassword(payload.email, payload.password).then(user => {
-				console.log('User:', user)
+				console.log('Authenticated User:', user)
                 const key = user.user.uid
                 const lastLoginTime = payload.loginTime
                 const userName = payload.name ? payload.name : user.user.email.split('@')[0]
@@ -60,6 +78,40 @@ const actions = {
                 reject(error && error.message ? error.message : error)
             })
         })
+	},
+	fetchAllUsers ({commit}, payload) {
+		db.ref('users').once('value').then(snapshot => {
+			const allUsers = snapshot.val()
+			let admins = []
+			for (let id in allUsers) {
+				admins.push({id: id, ...allUsers[id]})
+			}
+			commit('setAdmins', admins)
+		}).catch(error => {
+			console.log('Error fetching users from database:', error)
+		})
+	},
+	saveUserInvitation ({ commit}, payload) {
+		const data = {
+			...payload,
+			lastLogin: 'No login record'
+		}
+		return db.ref('users').push(data).then(res => {
+			commit('addUserToState', {id: res.key, ...data })
+			return { status: 'success'} 
+		}).catch(err => {
+			console.log('Error during saving new admin.')
+			return { status: 'error', message: 'err'}
+		})
+	},
+	deleteUser ({commit}, payload) {
+		return db.ref('users').child(payload).remove()
+		.then(() => {
+			commit('removeUser', payload)
+			return { status: 'success'}
+		}).catch(error => {
+			return { status: 'error', message: error}
+		})
 	},
 	userLogOut ({ commit }, payload) {
 		return auth.signOut().then(() => {
