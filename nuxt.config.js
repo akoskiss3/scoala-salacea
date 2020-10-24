@@ -1,7 +1,7 @@
 import colors from "vuetify/es5/util/colors";
 
 export default {
-  mode: "universal",
+  mode: "spa",
   target: "server",
   head: {
     titleTemplate: 'Școala Gimnazială "Balaskó Nándor" Sălacea',
@@ -18,10 +18,15 @@ export default {
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
   css: [],
-  plugins: ["~/plugins/firebase.js"],
+  plugins: [
+    { src: "~/plugins/firebase.js", ssr: false },
+    { src: "~/plugins/localStorage.js", ssr: false }
+  ],
   components: true,
   buildModules: ["@nuxtjs/vuetify"],
-  modules: [],
+  modules: [
+    'cookie-universal-nuxt'
+  ],
   vuetify: {
     customVariables: ["~/assets/variables.scss"],
     theme: {

@@ -1,12 +1,5 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+// import { } from '~/plugins/firebase.js'
 
-import userStore from './user.js';
-
-Vue.use(Vuex)
-
-export const store = new Vuex.Store({
-	modules: {
-		userStore
-	}
-});
+export const actions = {
+	// async nuxtServerInit ({ commit, dispatch }, { app }) {}
+}

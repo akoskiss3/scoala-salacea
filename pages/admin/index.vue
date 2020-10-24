@@ -46,6 +46,7 @@ import { db, auth } from '~/plugins/firebase.js'
 
 export default {
 	layout: 'admin',
+	middleware: 'auth',
 	data() {
 		return {
 			dashboardCards: [
@@ -76,18 +77,8 @@ export default {
 			dataFromDb: null
 		};
 	},
-	created () {
-		auth.onAuthStateChanged(user => {
-			console.log('USER:', user)
-            if (!user) {
-				this.$router.push('/admin/login')
-			} else {
-				this.$store.commit('user/setUser', {id: user.uid, email: user.email})
-			}
-		})
-	},
 	computed: {
-		...mapGetters('user', {
+		...mapGetters('modules/user', {
 			userStore: 'getUser'
 		})
 	},

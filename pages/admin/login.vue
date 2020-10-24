@@ -5,7 +5,7 @@
 				<v-card class="pt-5 loginCard">
 					<v-alert type="error" v-if="userFeedback" dismissible class="mt-n5">{{ errorMessage }}</v-alert>
 					<v-card-title class="justify-center headline">Login to admin dashboard</v-card-title>
-					<v-form v-model="valid">
+					<v-form v-if="!isPasswordFormChanged" v-model="valid">
 						<v-card-text>
 							<v-row class="justify-center">
 								<v-col cols="12" md="11">
@@ -36,13 +36,40 @@
 							<v-row class="justify-center">
 								<v-col cols="12" md="11">
 									<v-btn block color="#708D81"
-										@click="loginWithEmailAndPassword()"
+										@click="loginWithEmailAndPassword($event)"
 										:disabled="!valid"
+										:loading="isLoginLoading"
 										class="white--text">Login
 									</v-btn>
 								</v-col>
 							</v-row>
 						</v-card-actions>
+					</v-form>
+					<v-form v-if="isPasswordFormChanged" ref="newPassword" v-model="valid">
+						<v-row class="justify-center">
+							<v-col cols="12" md="10" xl="8">
+								<label>Please enter a new password</label>
+								<v-text-field
+									v-model="newPassword"
+									:rules="passwordRules"
+									type="password"
+									outlined
+									dense>
+								</v-text-field>
+							</v-col>
+						</v-row>
+						<v-row class="justify-center mt-n6 mb-5">
+							<v-col cols="12" md="10" xl="8">
+								<v-btn block large color="primary"
+									class="white--text"
+									type="submit"
+									@click="loginWithEmailAndPassword($event)"
+									:loading="isLoginLoading"
+									:disabled="!valid">
+									Save and Continue
+								</v-btn>
+							</v-col>
+						</v-row>
 					</v-form>
 				</v-card>
 			</v-col>
@@ -57,6 +84,7 @@ export default {
 		return {
 			email: '',
 			password: '',
+			newPassword: '',
 			emailRules: [
 				v => !!v || 'E-mail is required',
 				v => /.+@.+/.test(v) || 'E-mail must be valid'
@@ -66,23 +94,54 @@ export default {
 			],
 			userFeedback: false,
 			errorMessage: '',
-			valid: false
+			valid: false,
+			newPasswordEntered: false,
+			isPasswordFormChanged: false,
+			isLoginLoading: false
+		}
+	},
+	watch: {
+		newPassword (value) {
+			this.newPasswordEntered = value ? true : false
 		}
 	},
 	methods: {
-		loginWithEmailAndPassword () {
-			this.$store.dispatch('user/signUserIn', {
-				email: this.email,
-				password: this.password,
-				loginTime: Number(Date.now())})
-			.then((result) => {
-				if (result.status === 'success') {
-					this.$router.push('/admin')
-				}
-			}).catch(error => {
-				this.userFeedback = true
-				this.errorMessage = error
-			})
+		loginWithEmailAndPassword: function (e) {
+			this.isLoginLoading = true
+			e.preventDefault()
+			if (this.email && this.password && !this.newPasswordEntered && this.newPassword === '') {
+				this.$store.dispatch('modules/user/signUserIn', {
+					email: this.email,
+					password: this.password,
+					loginTime: Number(Date.now()),
+					isPasswordChanged: false
+				}).then((response) => {
+					if (response && response.setNewPassword) {
+						this.isPasswordFormChanged = true
+					} else if (response && response.status === 'success') {
+						this.$router.push('/admin')
+					}
+				}).catch(error => {
+					console.log('Error:', error)
+					this.userFeedback = true
+					this.errorMessage = error
+				}).finally(() => this.isLoginLoading = false)
+			} else if (this.email && this.newPassword !== '' && this.newPasswordEntered) {
+				this.$store.dispatch('modules/user/signUserIn', {
+					email: this.email,
+					password: this.newPassword,
+					loginTime: Number(Date.now()),
+					isPasswordChanged: true
+				}).then((response) => {
+					if (response && response.status === 'success') {
+						this.$router.push('/admin')
+					}
+				}).catch(error => {
+					console.log('Error:', error)
+					this.userFeedback = true
+					this.errorMessage = error
+				}).finally(() => this.isLoginLoading = false)
+			}
 		}
 	}
 }

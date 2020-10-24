@@ -19,7 +19,7 @@
 									required>
 								</v-text-field>
 								<v-row v-if="!generatedPass" class="mx-0 my-2">
-									<v-btn @click="generatePassword()" block color="grey lighten-2" class="primary--text text--darken-2">Generate Password</v-btn>
+									<v-btn @click="generatePassword()" block color="grey lighten-2" class="black--text">Generate Password</v-btn>
 								</v-row>
 								<v-row v-if="generatedPass">
 									<v-col cols="12">
@@ -56,16 +56,19 @@
 			</v-card>
 		</v-dialog>
 		<!-- DELETE CONFIRMATION DIALOG-->
-		<v-dialog v-model="deleteDialog" max-width="340">
+		<v-dialog v-model="deleteDialog" max-width="400">
 			<v-card>
-				<v-card-title>Are you sure want to delete the selected user?</v-card-title>
-				<v-card-actions class="justify-space-between">
-					<v-btn text @click="deleteDialog = false">Close</v-btn>
-					<v-btn text @click="deleteUser()">Yes</v-btn>
+				<v-card-title class="justify-center">
+					<span class="title font-weight-regular">Are you sure want to delete</span> 
+					<span class="grey--text text--darken-1 mt-1">{{ selectedUser.email }} ?</span>
+				</v-card-title>
+				<v-card-actions class="justify-space-between mt-3 mx-2">
+					<v-btn :color="cancelOnHover ? 'red' : 'grey darken-2'" text @click="deleteDialog = false" @mouseover="cancelOnHover = true" @mouseleave="cancelOnHover = false">Close</v-btn>
+					<v-btn :color="okOnHover ? 'green' : 'grey darken-2'" text @click="deleteUser()" @mouseover="okOnHover = true" @mouseleave="okOnHover = false">Yes</v-btn>
 				</v-card-actions>
 			</v-card>
 		</v-dialog>
-
+		<!-- USERS DATA TABLE -->
 		<v-row class="justify-center">
 			<v-col cols="12" md="10" lg="8">
 				<v-alert v-if="feedbackAlert" :type="feedbackType" dismissible>{{ feedbackMessage }}</v-alert>
@@ -89,7 +92,7 @@
 					<template v-slot:[`item.actions`]="{item}">
 						<v-tooltip bottom>
 							<template v-slot:activator="{on}">
-								<v-btn @click="selectUserForDelete(item.id)" icon v-on="on"><v-icon color="red">mdi-delete-outline</v-icon></v-btn>
+								<v-btn @click="selectUserForDelete(item)" icon v-on="on"><v-icon color="red">mdi-delete-outline</v-icon></v-btn>
 							</template>
 							<span>Delete</span>
 						</v-tooltip>
@@ -130,22 +133,17 @@ export default {
 			feedbackType: 'info',
 			feedbackMessage: '',
 			deleteDialog: false,
-			selectedUserId: ''
+			selectedUser: '',
+			cancelOnHover: false,
+			okOnHover: false
 		}
 	},
 	created () {
 		this.isDataLoading = true
-		this.$store.dispatch('user/fetchAllUsers').finally(() => this.isDataLoading = false)
-		auth.onAuthStateChanged(user => {
-			if (!user) {
-				this.$router.push('/admin/login')
-			} else {
-				this.$store.commit('user/setUser', {id: user.uid, email: user.email})
-			}
-		})
+		this.$store.dispatch('modules/user/fetchAllUsers').finally(() => this.isDataLoading = false)
 	},
 	computed: {
-		...mapGetters('user', {
+		...mapGetters('modules/user', {
 			users: 'getAllUsers'
 		})
 	},
@@ -186,7 +184,7 @@ export default {
 		},
 		addNewAdmin () {
 			this.isSavingAdminLoading = true
-			this.$store.dispatch('user/saveUserInvitation', {
+			this.$store.dispatch('modules/user/saveUserInvitation', {
 				email: this.newAdminEmail,
 				oneTimePass: this.generatedPass
 			}).then(res => {
@@ -197,23 +195,25 @@ export default {
 			}).finally(() => {
 				this.isSavingAdminLoading = false
 				this.addNewAdminDialog = false
+				this.newAdminEmail = ''
+				this.generatedPass = ''
 			})
 		},
-		selectUserForDelete (id) {
-			this.selectedUserId = id
+		selectUserForDelete (user) {
+			this.selectedUser = user
 			this.deleteDialog = true
 		},
 		deleteUser () {
-			const id = this.selectedUserId
+			const id = this.selectedUser.id
 			console.log('Delete User ID:', id)
-			this.$store.dispatch('user/deleteUser', id).then(res => {
+			this.$store.dispatch('modules/user/deleteUser', id).then(res => {
 				this.setUserFeedback('success', 'User deleted successfully!')
 			}).catch(error => {
 				console.log('Error during deleting user:', error)
 				this.setUserFeedback('error', error.message)
 			}).finally(() => {
 				this.deleteDialog = false
-				this.selectedUserId = ''
+				this.selectedUser = ''
 			})
 		},
 		setUserFeedback(type, message) {

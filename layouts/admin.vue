@@ -7,7 +7,7 @@
 						<v-icon large color="#2A262C">mdi-view-dashboard</v-icon>
 					</v-btn>
 				</template>
-				<span>Home</span>
+				<span>Dashboard</span>
 			</v-tooltip>
 			<v-toolbar-title>"Balaskó Nándor" School Admin</v-toolbar-title>
 			<v-spacer />
@@ -18,7 +18,7 @@
 			<nuxt />
 		</v-main>
 
-		<v-footer absolute app>
+		<v-footer absolute app color="#C7BCA8">
 			<v-row class="justify-center">
 				<span>&copy; {{ new Date().getFullYear() }}</span>
 			</v-row>
@@ -31,13 +31,13 @@ import { auth } from '~/plugins/firebase.js'
 
 export default {
 	computed: {
-		...mapGetters('user', {
+		...mapGetters('modules/user', {
 			userStore: 'getUser'
 		})
 	},
 	methods: {
 		logout () {
-			this.$store.dispatch('user/userLogOut').then(() => {
+			this.$store.dispatch('modules/user/userLogOut').then(() => {
 				this.$router.push('/admin/login')
 			})
 		}
