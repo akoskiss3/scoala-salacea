@@ -4,7 +4,7 @@
 			<v-tooltip bottom>
 				<template v-slot:activator="{on}">
 					<v-btn icon depressed class="mr-2" to="/admin" v-on="on">
-						<v-icon large color="#2A262C">mdi-view-dashboard</v-icon>
+						<v-icon large color="#3F3B41">mdi-view-dashboard</v-icon>
 					</v-btn>
 				</template>
 				<span>Dashboard</span>

@@ -24,19 +24,6 @@
 				</v-row>
 			</v-col>
 		</v-row>
-
-		<!-- <v-row class="justify-center">
-			<v-col cols="12" md="10" xl="8">
-				<v-card>
-					<v-card-text>
-						<p>{{ dataFromDb }} </p>
-					</v-card-text>
-					<v-card-actions>
-						<v-btn @click="getItemFromDb()">GET ITEM</v-btn>
-					</v-card-actions>
-				</v-card>
-			</v-col>
-		</v-row> -->
 	</v-container>
 </template>
 
@@ -53,7 +40,8 @@ export default {
 				{
 					icon: 'mdi-newspaper-variant-multiple-outline',
 					title: 'News',
-					description: 'Manage News feed'
+					description: 'Manage News feed',
+					navigateTo: '/admin/news'
 				},
 				{
 					icon: 'mdi-image',
@@ -83,12 +71,7 @@ export default {
 		})
 	},
 	methods: {
-		async getItemFromDb() {
-			let result = await db.ref('news').once('value').then(snapshot => {
-				console.log('Snaphot::', snapshot.val())
-				this.dataFromDb = snapshot.val()
-			})
-		}
+		
 	}
 };
 </script>
