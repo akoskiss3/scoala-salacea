@@ -39,7 +39,7 @@ export default {
 			dashboardCards: [
 				{
 					icon: 'mdi-newspaper-variant-multiple-outline',
-					title: 'News',
+					title: 'News and Posts',
 					description: 'Manage News feed',
 					navigateTo: '/admin/news'
 				},

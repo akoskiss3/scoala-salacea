@@ -1,6 +1,8 @@
 <template>
-	<v-container>
-		<h2>Gallery Component</h2>
+	<v-container fluid>
+		<v-row class="justify-center">
+			<h1>Gallery page</h1>
+		</v-row>
 	</v-container>
 </template>
 

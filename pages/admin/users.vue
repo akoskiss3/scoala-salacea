@@ -102,7 +102,7 @@
 						<span v-else>{{ formatDate(item.lastLogin) }}</span>
 					</template>
 					<template v-slot:[`item.actions`]="{item}">
-						<v-tooltip bottom>
+						<v-tooltip bottom v-if="!item.superadmin">
 							<template v-slot:activator="{on}">
 								<v-btn @click="selectUserForDelete(item)" icon v-on="on"><v-icon color="red">mdi-delete-outline</v-icon></v-btn>
 							</template>

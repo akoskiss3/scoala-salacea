@@ -1,16 +1,18 @@
 <template>
 	<v-container>
-		<v-row class="pl-2 mb-n1 mt-1">
-			<v-tooltip bottom>
-				<template v-slot:activator="{on}">
-					<v-btn icon to="/admin" v-on="on" color="white"><v-icon color="#3F3B41" class="mt-n1" size="25">mdi-chevron-left</v-icon></v-btn>
-				</template>
-				<span>Back</span>
-			</v-tooltip>
-			<span class="title font-weight-regular ml-2">Documents</span>
+		<v-row class="ml-n5 mb-n4 mt-n2 justify-center">
+			<v-col cols="12" md="10" xl="8">
+				<v-tooltip bottom>
+					<template v-slot:activator="{on}">
+						<v-btn icon to="/admin" v-on="on" color="white"><v-icon color="#3F3B41" class="mt-n1" size="25">mdi-chevron-left</v-icon></v-btn>
+					</template>
+					<span>Back</span>
+				</v-tooltip>
+				<span class="title font-weight-regular ml-2">Documents</span>
+			</v-col>
 		</v-row>
-		<v-row>
-			<v-col cols="12">
+		<v-row class="justify-center">
+			<v-col cols="12" xl="8">
 				<v-alert v-if="deleteFeedback" dismissible type="success" outlined transition="fade-transition">Selected file deleted successfully!</v-alert>
 				<v-card outlined class="elevation-1">
 					<v-card-title class="subtitle-1">
