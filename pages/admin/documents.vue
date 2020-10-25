@@ -1,5 +1,14 @@
 <template>
 	<v-container>
+		<v-row class="pl-2 mb-n1 mt-1">
+			<v-tooltip bottom>
+				<template v-slot:activator="{on}">
+					<v-btn icon to="/admin" v-on="on" color="white"><v-icon color="#3F3B41" class="mt-n1" size="25">mdi-chevron-left</v-icon></v-btn>
+				</template>
+				<span>Back</span>
+			</v-tooltip>
+			<span class="title font-weight-regular ml-2">Documents</span>
+		</v-row>
 		<v-row>
 			<v-col cols="12">
 				<v-alert v-if="deleteFeedback" dismissible type="success" outlined transition="fade-transition">Selected file deleted successfully!</v-alert>
@@ -110,8 +119,11 @@ export default {
 		},
 		handleRemoveFile(...params) {
 			const paramData = params[1]
-            const removedFileName = paramData.filename
-            console.log('removedFileName:', removedFileName)
+			console.log('PARAM DATA :', paramData)
+            const removedFileName = paramData.filenameWithoutExtension
+			console.log('removedFileName:', removedFileName)
+			let file = this.filesList.filter(item => item.name.includes(removedFileName))
+			this.deleteFile(file[0])
 		},
 		process(fieldName, file, metadata, load, error, progress, abort) {
 			console.log('[ Uploaded file ] ::', file)

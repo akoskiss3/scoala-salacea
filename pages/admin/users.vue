@@ -68,6 +68,18 @@
 				</v-card-actions>
 			</v-card>
 		</v-dialog>
+
+		<v-row class="justify-center mt-n2 mb-n5">
+			<v-col cols="12" md="10" lg="8">
+				<v-tooltip bottom>
+					<template v-slot:activator="{on}">
+						<v-btn icon to="/admin" v-on="on" color="white"><v-icon color="#3F3B41" class="mt-n1" size="25">mdi-chevron-left</v-icon></v-btn>
+					</template>
+					<span>Back</span>
+				</v-tooltip>
+				<span class="title font-weight-regular ml-2">Users</span>
+			</v-col>
+		</v-row>
 		<!-- USERS DATA TABLE -->
 		<v-row class="justify-center">
 			<v-col cols="12" md="10" lg="8">
