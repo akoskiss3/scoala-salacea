@@ -27,7 +27,7 @@
 										color="#708D81"
 										:rules="passwordRules"
 										v-model="password"
-										@keyup.enter="loginWithEmailAndPassword()">
+										@keyup.enter="loginWithEmailAndPassword($event)">
 									</v-text-field>
 								</v-col>
 							</v-row>
