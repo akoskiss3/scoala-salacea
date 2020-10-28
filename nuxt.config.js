@@ -39,10 +39,12 @@ export default {
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
-          success: colors.green.accent3
+          success: colors.green.accent3,
+          main: '#C7BCA8'
         },
         light: {
-          primary: '#708D81'
+          primary: '#708D81',
+          main: '#C7BCA8'
         }
       }
     }

@@ -67,6 +67,10 @@
 		</v-row>
 		<v-row class="justify-center mt-12">
 			<h3>Here will be the Posts section ... Under construction, please stand by :)</h3>
+
+			<!-- TODO 1. az admin loginnal prevent default error kijavitasa -->
+
+			
 		</v-row>
 	</v-container>
 </template>
